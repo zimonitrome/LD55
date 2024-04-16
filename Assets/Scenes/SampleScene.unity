@@ -366,6 +366,8 @@ MonoBehaviour:
   idleMusic: {fileID: 8300000, guid: dcee403c9a645914da483951af1be516, type: 3}
   spawner: {fileID: 0}
   startButton: {fileID: 1759567693}
+  startButtonText: {fileID: 1919119714}
+  isGameOver: 0
 --- !u!212 &72603999
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2702,6 +2704,7 @@ MonoBehaviour:
   speed: 1
   damage: 1
   healthBar: {fileID: 1187113664}
+  maxHealth: 0
 --- !u!1 &1587106295
 GameObject:
   m_ObjectHideFlags: 0

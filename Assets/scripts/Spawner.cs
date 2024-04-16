@@ -58,10 +58,8 @@ public class Spawner : MonoBehaviour
     public void OnEnemyDeath()
     {
         enemiesAlive--;
-        Debug.Log(  "enemiesAlive: " + enemiesAlive + "\n" +
-                    "currentEnemyIndex: " + currentEnemyIndex + "\n" +
-                    "waves[GameManager.Instance.currentWave - 1].Count: " + waves[GameManager.Instance.currentWave - 1].Count + "\n");
-        if (enemiesAlive <= 0 && currentEnemyIndex >= waves[GameManager.Instance.currentWave - 1].Count)
+        Debug.Log("Enemies Alive: " + enemiesAlive);
+        if (enemiesAlive <= 0 && currentEnemyIndex >= waves[GameManager.Instance.currentWave - 1].Count && !GameManager.Instance.isGameOver)
         {
             Debug.Log("EndRound");
             GameManager.Instance.EndRound();

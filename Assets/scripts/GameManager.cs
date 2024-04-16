@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public AudioClip idleMusic;
     public Spawner spawner;
     public Button startButton;
+    public TextMeshProUGUI startButtonText;
+    public bool isGameOver = false;
 
     private void Awake()
     {
@@ -39,7 +41,6 @@ public class GameManager : MonoBehaviour
         PlayMusic(idleMusic);
 
         spawner = FindObjectOfType<Spawner>();
-        Debug.Log("Spawner 1:" + spawner);
     }
 
     private void setBetweenUI(bool isActive)
@@ -50,22 +51,42 @@ public class GameManager : MonoBehaviour
 
     public void StartRound()
     {
-        if (currentWave <= totalWaves)
+        if (isGameOver) {
+            currentWave = 1;
+            isGameOver = false;
+            CoinManager.Instance.resetCoins();
+            Barn barn = FindObjectOfType<Barn>();
+            barn.health = barn.maxHealth;
+            barn.TakeDamage(0);
+            Debug.Log(barn.healthBar.transform.localScale);
+
+            isRoundActive = true;
+            spawner.currentEnemyIndex = 0; // Reset enemy index at the start of each round
+            UpdateUI($"Round {currentWave} has started!");
+            setBetweenUI(false);
+            startButtonText.text = "PLAY!";
+
+            spawner.enemiesAlive = 0;
+        }
+        else if (currentWave <= totalWaves)
         {
             isRoundActive = true;
             spawner.currentEnemyIndex = 0; // Reset enemy index at the start of each round
             UpdateUI($"Round {currentWave} has started!");
             setBetweenUI(false);
+            startButtonText.text = "PLAY!";
         }
     }
 
     public void EndRound()
     {
         isRoundActive = false;
-        if (currentWave == 1) {
+        if (currentWave == 1)
+        {
             UpdateUI(" Phew, night 1 is over.  Press PLAY for next night.");
         }
-        else if (currentWave == 2) {
+        else if (currentWave == 2)
+        {
             UpdateUI($"Phew, night 2 is over.  Press PLAY for next night.");
         }
         setBetweenUI(true);
@@ -91,25 +112,43 @@ public class GameManager : MonoBehaviour
             GameWin();
         }
 
-        TextMeshPro buttonText = startButton.GetComponentInChildren<TextMeshPro>();
-        buttonText.text = "Next!";
+        startButtonText.text = "PLAY!";
     }
 
     public void GameOver()
     {
-        UpdateUI("Those fat kids ate all your candy. Game Over.");
-        SetGameState(false);
-        TextMeshPro buttonText = startButton.GetComponentInChildren<TextMeshPro>();
-        buttonText.text = "Again?";
+        isGameOver = true;
+        UpdateUI(" Those fat kids ate all your candy!\n\n Game Over.");
+        isRoundActive = false;
+        setBetweenUI(true);
+
+        // Find all instances of Potato and destroy them
+        Potato[] potatoes = FindObjectsOfType<Potato>();
+        foreach (Potato potato in potatoes)
+        {
+            Destroy(potato.gameObject);
+        }
+
+        // Find all instances of Batman and destroy
+        Batman[] batmen = FindObjectsOfType<Batman>();
+        foreach (Batman batman in batmen)
+        {
+            Destroy(batman.gameObject);
+        }
+
+
+        // startButton.gameObject.SetActive(false);
+        startButtonText.text = "Again?";
     }
 
     public void GameWin()
     {
-        UpdateUI(   " Congrats! You fended of all kids." + "\n" +
+        UpdateUI(" Congrats! You fended of all kids." + "\n" +
                     " At least for this hallloween...");
         SetGameState(false);
-        // Hide button
-        startButton.gameObject.SetActive(false);
+
+        // startButton.gameObject.SetActive(false);
+        startButtonText.text = "Again?";
     }
     private void UpdateUI(string text)
     {

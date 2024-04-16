@@ -6,7 +6,7 @@ public abstract class Character : MonoBehaviour
     public float speed = 1f;
     public float damage = 1f;
     public GameObject healthBar;
-    private float maxHealth;
+    public float maxHealth;
 
     protected Rigidbody2D rb;
     protected Animator animator;
@@ -34,6 +34,7 @@ public abstract class Character : MonoBehaviour
     public virtual void TakeDamage(float amount)
     {
         health -= amount;
+        health = Mathf.Clamp(health, 0, maxHealth);
         healthBar.transform.localScale = new Vector3(health / maxHealth, 1, 1);
         if (health <= 0)
         {

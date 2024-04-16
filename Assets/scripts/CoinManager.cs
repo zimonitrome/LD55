@@ -4,7 +4,7 @@ public class CoinManager : MonoBehaviour
 {
     public static CoinManager Instance { get; private set; } // Singleton pattern
 
-    [SerializeField] private int initialCoins = 0; // Starting number of coins, adjustable in the editor
+    [SerializeField] private int initialCoins = 10; // Starting number of coins, adjustable in the editor
     public int Coins { get; private set; } // Property to keep track of coins
 
     void Awake()
@@ -25,6 +25,12 @@ public class CoinManager : MonoBehaviour
     public void AddCoins(int amount)
     {
         Coins += amount;
+        UpdateCoinUI();
+    }
+
+    public void resetCoins()
+    {
+        Coins = initialCoins;
         UpdateCoinUI();
     }
 
